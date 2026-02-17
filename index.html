@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consola JavaScript - Modo Desarrollador</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efecto de matriz de fondo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .container {
+            background: rgba(10, 14, 39, 0.9);
+            border: 2px solid #00ffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.5),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 255, 0.5),
+                    inset 0 0 20px rgba(0, 255, 255, 0.1);
+            }
+            to {
+                box-shadow: 
+                    0 0 30px rgba(0, 255, 255, 0.8),
+                    inset 0 0 30px rgba(0, 255, 255, 0.2);
+            }
+        }
+
+        .header {
+            border-bottom: 2px solid #00ffff;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .terminal-text {
+            color: #00ffff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            color: #00ff88;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+            letter-spacing: 3px;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .console-box {
+            background: #000;
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .console-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .command {
+            color: #ff00ff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .command::before {
+            content: '> ';
+            color: #00ff88;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .method-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .method-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00ff88;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .method-title {
+            color: #ff00ff;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .key-combo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .key {
+            display: inline-block;
+            background: linear-gradient(145deg, #1a1f3a, #0f1228);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.5),
+                inset 0 0 10px rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .key:hover {
+            background: linear-gradient(145deg, #00ffff, #00cccc);
+            color: #000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .separator {
+            color: #00ff88;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .os-label {
+            color: #00ffff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .method-desc {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .note {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid #00ff88;
+            color: #00ff88;
+            font-size: 0.95rem;
+            text-align: left;
+            border-radius: 5px;
+        }
+
+        .note strong {
+            color: #00ffff;
+        }
+
+        .blink {
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Partículas flotantes */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: particle-float 10s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .key {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Partículas decorativas -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 3s;"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="terminal-text">$ MODO_DESARROLLADOR ACTIVADO</div>
+            <div class="icon">⚡</div>
+            <h1>&lt;/&gt; ACCESO A CONSOLA</h1>
+        </div>
+
+        <div class="console-box">
+            <div class="command">Inicializando Consola JavaScript...</div>
+            <div class="command">Estado: <span style="color: #00ff88;">LISTO</span><span class="blink">_</span></div>
+        </div>
+
+        <div class="methods-grid">
+            <!-- Método 1 -->
+            <div class="method-card">
+                <div class="method-number">1</div>
+                <div class="method-title">Tecla Rápida</div>
+                <div class="os-label">[ Todos los Sistemas ]</div>
+                <div class="key-combo">
+                    <span class="key">F12</span>
+                </div>
+                <div class="method-desc">La forma más rápida y universal de abrir las herramientas de desarrollo.</div>
+            </div>
+
+            <!-- Método 2 -->
+            <div class="method-card">
+                <div class="method-number">2</div>
+                <div class="method-title">Atajo Windows/Linux</div>
+                <div class="os-label">[ Windows / Linux ]</div>
+                <div class="key-combo">
+                    <span class="key">Ctrl</span>
+                    <span class="separator">+</span>
+                    <span class="key">Shift</span>
+                    <span class="separator">+</span>
+                    <span class="key">I</span>
+                </div>
+                <div class="method-desc">Combinación de teclas alternativa para Windows y distribuciones Linux.</div>
+            </div>
+
+            <!-- Método 3 -->
+            <div class="method-card">
+                <div class="method-number">3</div>
+                <div class="method-title">Atajo MacOS</div>
+                <div class="os-label">[ MacOS ]</div>
+                <div class="key-combo">
+                    <span class="key">⌘</span>
+                    <span class="separator">+</span>
+                    <span class="key">⌥</span>
+                    <span class="separator">+</span>
+                    <span class="key">I</span>
+                </div>
+                <div class="method-desc">Comando específico para sistemas macOS usando Command + Option.</div>
+            </div>
+
+            <!-- Método 4 -->
+            <div class="method-card">
+                <div class="method-number">4</div>
+                <div class="method-title">Consola Directa</div>
+                <div class="os-label">[ Windows / Linux ]</div>
+                <div class="key-combo">
+                    <span class="key">Ctrl</span>
+                    <span class="separator">+</span>
+                    <span class="key">Shift</span>
+                    <span class="separator">+</span>
+                    <span class="key">J</span>
+                </div>
+                <div class="method-desc">Abre directamente la pestaña Console sin pasar por otros paneles.</div>
+            </div>
+
+            <!-- Método 5 -->
+            <div class="method-card">
+                <div class="method-number">5</div>
+                <div class="method-title">Consola Directa Mac</div>
+                <div class="os-label">[ MacOS ]</div>
+                <div class="key-combo">
+                    <span class="key">⌘</span>
+                    <span class="separator">+</span>
+                    <span class="key">⌥</span>
+                    <span class="separator">+</span>
+                    <span class="key">J</span>
+                </div>
+                <div class="method-desc">Acceso directo a la consola en macOS usando Command + Option + J.</div>
+            </div>
+
+            <!-- Método 6 -->
+            <div class="method-card">
+                <div class="method-number">6</div>
+                <div class="method-title">Menú del Navegador</div>
+                <div class="os-label">[ Todos los Navegadores ]</div>
+                <div class="method-desc" style="margin-top: 20px;">
+                    <strong style="color: #ff00ff;">Chrome/Edge:</strong> Menú (⋮) → Más herramientas → Herramientas para desarrolladores
+                    <br><br>
+                    <strong style="color: #ff00ff;">Firefox:</strong> Menú (≡) → Más herramientas → Herramientas de desarrollo web
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>⚙️ PASO SIGUIENTE:</strong> Una vez abierta, navega a la pestaña <strong>"Console"</strong> o <strong>"Consola"</strong> para visualizar la salida de JavaScript y la información de depuración.
+            <br><br>
+            <strong>💡 TIP PRO:</strong> Puedes desacoplar las herramientas de desarrollo presionando el ícono de los tres puntos verticales (⋮) dentro de DevTools.
+        </div>
+    </div>
+
+    <script src="02_Practica.js"></script>
+</body>
+
+</html>

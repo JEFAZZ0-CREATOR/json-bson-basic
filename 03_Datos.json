@@ -1,0 +1,50 @@
+{
+    "ejemplos_json": {
+        "descripcion": "Ejemplo de un documento JSON con varios tipos de datos y estructuras anidadas.",
+        "datos": {
+            "nombre": "JEFAZZ0",
+            "edad": 16,
+            "activo": true,
+            "hobbies": [
+                "Jugar",
+                "BDG",
+                "Comer"
+            ],
+            "dirección": {
+                "calle": "Calle falsa 123",
+                "ciudad": "Tokio",
+                "pais": "Japon"
+            },
+            "contacto": null
+        },
+        "nota": "Este ejemplo muestra cómo JSON puede representar diferentes tipos de datos y estructuras complejas"
+    },
+    "ejemplo_documento_mongodb": {
+        "descripcion": "Ejemplo de un documento típicom en MongoDB, que utiliza BSON internamente.",
+        "datos": {
+            "_id": "1",
+            "producto": "POCO X7 Pro 5G",
+            "precio": 799.99,
+            "disponible_stock": true,
+            "categorias": [
+                "electronica",
+                "moviles",
+                "smartphone"
+            ],
+            "espesificaciones": {
+                "procesador": "MediaTek Dimensity 8400-Ultra",
+                "ram": "12 GB",
+                "almacenamiento": "512 GB",
+                "pantalla": "6.67 pulgadas",
+                "bateria": "6000 mAh"
+            },
+            "fecha_creación":"2025-01-09T10:00:00Z",
+            "reviews": [
+                {
+                    "usuario": "El coach de vida",
+                    "comentario": "Si si es un buen telefono"
+                }
+            ]
+        }
+    }
+}
